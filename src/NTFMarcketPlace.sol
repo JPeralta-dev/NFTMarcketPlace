@@ -12,9 +12,9 @@ contract NFTMarketPlaceMultiCollection is Ownable {
         uint256 price;
     }
 
-    mapping(address => Listing) test;
-
+    mapping(address => mapping(uint256 => Listing)) listings;
     constructor() Ownable(msg.sender) {}
+
     // List NFT
 
     // buy nft
