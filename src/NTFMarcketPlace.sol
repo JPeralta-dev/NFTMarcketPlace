@@ -4,6 +4,8 @@ pragma solidity 0.8.28;
 
 import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 
+error NotPermitValue();
+
 contract NFTMarketPlaceMultiCollection is Ownable {
     struct Listing {
         address seller;
@@ -14,14 +16,17 @@ contract NFTMarketPlaceMultiCollection is Ownable {
 
     mapping(address => mapping(uint256 => Listing)) listings;
     constructor() Ownable(msg.sender) {}
-
+    modifier checkValue(uint256 value) {
+        if (value <= 0) revert NotPermitValue();
+        _;
+    }
     // List NFT
 
     function listNFT(
         address nftAdress_,
         uint16 tokenId_,
         uint256 price_
-    ) external {
+    ) external checkValue(price_) {
         Listing memory listin = Listing({
             seller: msg.sender,
             nftAddress: nftAdress_,
@@ -31,7 +36,7 @@ contract NFTMarketPlaceMultiCollection is Ownable {
 
         listings[nftAdress_][tokenId_] = listin;
     }
-
     // buy nft
+    function buyNFT() external {}
     // Cancel
 }
