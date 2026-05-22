@@ -17,6 +17,21 @@ contract NFTMarketPlaceMultiCollection is Ownable {
 
     // List NFT
 
+    function listNFT(
+        address nftAdress_,
+        uint16 tokenId_,
+        uint256 price_
+    ) external {
+        Listing memory listin = Listing({
+            seller: msg.sender,
+            nftAddress: nftAdress_,
+            tokenId: tokenId_,
+            price: price_
+        });
+
+        listings[nftAdress_][tokenId_] = listin;
+    }
+
     // buy nft
     // Cancel
 }
