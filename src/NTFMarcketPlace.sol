@@ -3,6 +3,7 @@
 pragma solidity 0.8.28;
 
 import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
+import "../lib/openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 
 error NotPermitValue();
 
@@ -20,6 +21,7 @@ contract NFTMarketPlaceMultiCollection is Ownable {
         if (value <= 0) revert NotPermitValue();
         _;
     }
+
     // List NFT
 
     function listNFT(
@@ -27,6 +29,11 @@ contract NFTMarketPlaceMultiCollection is Ownable {
         uint16 tokenId_,
         uint256 price_
     ) external checkValue(price_) {
+        // necesitamos evaluar que si sea un token como hacemos eso
+        address owner_ = IERC721(nftAdress_).ownerOf(tokenId_);
+
+        require(owner_ == msg.sender, "You are not the owner of the NFT");
+
         Listing memory listin = Listing({
             seller: msg.sender,
             nftAddress: nftAdress_,
