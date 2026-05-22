@@ -16,7 +16,21 @@ contract NFTMarketPlaceMultiCollection is Ownable {
     }
 
     mapping(address => mapping(uint256 => Listing)) listings;
+
+    event addListingNft(
+        address indexed nftAdress,
+        address indexed seller,
+        uint16 tokenId,
+        uint256 price
+    );
+
+    event cancelledNFT(
+        address indexed nftAdress,
+        address indexed selle,
+        uint16 tokenId
+    );
     constructor() Ownable(msg.sender) {}
+
     modifier checkValue(uint256 value) {
         if (value <= 0) revert NotPermitValue();
         _;
@@ -42,6 +56,7 @@ contract NFTMarketPlaceMultiCollection is Ownable {
         });
 
         listings[nftAdress_][tokenId_] = listin;
+        emit addListingNft(nftAdress_, msg.sender, tokenId_, price_);
     }
     // buy nft
     function buyNFT() external {}
@@ -53,5 +68,6 @@ contract NFTMarketPlaceMultiCollection is Ownable {
         require(listing_.seller == msg.sender, "Tu no eres el dueno");
 
         delete listings[nftAdress_][tokenId_];
+        emit cancelledNFT(nftAdress_, msg.sender, tokenId_);
     }
 }
