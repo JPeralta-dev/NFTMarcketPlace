@@ -8,12 +8,7 @@ import {IERC721} from "../lib/openzeppelin-contracts/contracts/token/ERC721/IERC
 error NotPermitValue();
 
 contract NFTMarketPlaceMultiCollection is Ownable {
-    struct Listing {
-        address seller;
-        address nftAddress;
-        uint16 tokenId;
-        uint256 price;
-    }
+    struct Listing {address seller;address nftAddress;uint16 tokenId;uint256 price;}
 
     mapping(address => mapping(uint256 => Listing)) listings;
 
