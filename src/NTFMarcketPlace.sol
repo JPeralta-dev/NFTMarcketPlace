@@ -46,4 +46,12 @@ contract NFTMarketPlaceMultiCollection is Ownable {
     // buy nft
     function buyNFT() external {}
     // Cancel
+
+    function cancelNFT(address nftAdress_, uint16 tokenId_) external {
+        Listing memory listing_ = listings[nftAdress_][tokenId_];
+
+        require(listing_.seller == msg.sender, "Tu no eres el dueno");
+
+        delete listings[nftAdress_][tokenId_];
+    }
 }
