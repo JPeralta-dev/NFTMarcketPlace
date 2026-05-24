@@ -19,7 +19,8 @@ contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
     mapping(address => mapping(uint256 => Listing)) listings;
 
     event addListingNft(address indexed nftAdress, address indexed seller, uint16 tokenId, uint256 price);
-    event cancelledNFT(address indexed nftAdress, address indexed selle, uint16 tokenId);
+    event cancelledNFT(address indexed nftAdress, address indexed seller, uint16 tokenId);
+    event soldNft(address indexed nftAdress, address indexed seller, uint16 tokenId, address indexed comprador);
     constructor() Ownable(msg.sender) {}
 
     modifier checkValue(uint256 value) {
@@ -54,6 +55,7 @@ contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
 
         IERC721(nftAdress_).safeTransferFrom(listing_.seller, msg.sender, listing_.tokenId);
 
+        emit soldNft(listing_.nftAddress, listing_.seller, listing_.tokenId, msg.sender);
     }
     // Cancel
 
