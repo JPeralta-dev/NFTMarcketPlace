@@ -4,11 +4,17 @@ pragma solidity 0.8.28;
 
 import {Ownable} from "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import {IERC721} from "../lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol";
+import {ReentrancyGuard} from "../lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
 
 error NotPermitValue();
 
-contract NFTMarketPlaceMultiCollection is Ownable {
-    struct Listing {address seller;address nftAddress;uint16 tokenId;uint256 price;}
+contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
+    struct Listing {
+        address seller;
+        address nftAddress;
+        uint16 tokenId;
+        uint256 price;
+        }
 
     mapping(address => mapping(uint256 => Listing)) listings;
 
@@ -19,10 +25,6 @@ contract NFTMarketPlaceMultiCollection is Ownable {
     modifier checkValue(uint256 value) {
         _checkValue(value);
         _;
-    }
-
-    function _checkValue(uint256 value) internal pure {
-        if (value <= 0) revert NotPermitValue();
     }
 
     // List NFT
@@ -39,7 +41,20 @@ contract NFTMarketPlaceMultiCollection is Ownable {
         emit addListingNft(nftAdress_, msg.sender, tokenId_, price_);
     }
     // buy nft
-    function buyNft() external {}
+    function buyNft(address nftAdress_, uint16 tokenId_) external payable nonReentrant() {
+        Listing memory listing_ = listings[nftAdress_][tokenId_];
+        require(listing_.price > 0, "Listing not exist");
+        require(msg.value == listing_.price, "Incorrect value");
+
+        delete listings[nftAdress_][tokenId_];
+
+        (bool success,) =listing_.seller.call{value: msg.value}("");
+
+        require(success, "Fail");
+
+        IERC721(nftAdress_).safeTransferFrom(listing_.seller, msg.sender, listing_.tokenId);
+
+    }
     // Cancel
 
     function cancelNft(address nftAdress_, uint16 tokenId_) external {
@@ -49,5 +64,9 @@ contract NFTMarketPlaceMultiCollection is Ownable {
 
         delete listings[nftAdress_][tokenId_];
         emit cancelledNFT(nftAdress_, msg.sender, tokenId_);
+    }
+
+    function _checkValue(uint256 value) internal pure {
+        if (value <= 0) revert NotPermitValue();
     }
 }
