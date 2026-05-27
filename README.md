@@ -64,3 +64,15 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+
+- No puede comprar si no existe listing
+- No puede listar si no es owner
+- No puede comprar con ETH incorrecto
+- Cancel elimina listing
+- Compra transfiere NFT
+- Compra transfiere ETH
+- Reentrancy attack
+- Double buy
+- Relisting
+- NFT sin approval

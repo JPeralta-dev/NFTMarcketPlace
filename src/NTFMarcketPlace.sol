@@ -49,7 +49,7 @@ contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
 
         delete listings[nftAdress_][tokenId_];
 
-        (bool success,) =listing_.seller.call{value: msg.value}("");
+        (bool success,) = listing_.seller.call{value: msg.value}("");
 
         require(success, "Fail");
 
