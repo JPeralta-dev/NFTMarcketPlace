@@ -14,7 +14,7 @@ contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
         address nftAddress;
         uint16 tokenId;
         uint256 price;
-        }
+    }
 
     mapping(address => mapping(uint256 => Listing)) listings;
 
@@ -36,7 +36,7 @@ contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
 
         require(owner_ == msg.sender, "You are not the owner of the NFT");
 
-        Listing memory listin = Listing({seller: msg.sender, nftAddress: nftAdress_, tokenId: tokenId_, price: price_});
+        Listing memory listin = Listing({seller: msg.sender, nftAddress: nftAdress_, tokenId: tokenId_, price: price_}); // gasta poco gas porquie se gaurda en memora una vez termien no queda en la red
 
         listings[nftAdress_][tokenId_] = listin;
         emit addListingNft(nftAdress_, msg.sender, tokenId_, price_);
@@ -47,13 +47,13 @@ contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
         require(listing_.price > 0, "Listing not exist");
         require(msg.value == listing_.price, "Incorrect value");
 
-        delete listings[nftAdress_][tokenId_];
+        delete listings[nftAdress_][tokenId_]; // primer cambio el estado 
 
-        (bool success,) = listing_.seller.call{value: msg.value}("");
+        (bool success,) = listing_.seller.call{value: msg.value}(""); // envio al vendedor su parte
 
         require(success, "Fail");
 
-        IERC721(nftAdress_).safeTransferFrom(listing_.seller, msg.sender, listing_.tokenId);
+        IERC721(nftAdress_).safeTransferFrom(listing_.seller, msg.sender, listing_.tokenId); // transferir el nft
 
         emit soldNft(listing_.nftAddress, listing_.seller, listing_.tokenId, msg.sender);
     }
