@@ -22,7 +22,7 @@ contract NtfMarcketPlaceTest is Test {
     MockNFT nft;
     address deployer = vm.addr(1);
     address user = vm.addr(2);
-    uint256 tokenId_ = 0;
+    uint16 tokenId_ = 0;
 
 
     function setUp() public{
@@ -39,5 +39,25 @@ contract NtfMarcketPlaceTest is Test {
     function testMintNft () public view {
         address ownerOf_ = nft.ownerOf(tokenId_);
         assert(ownerOf_ == user);
+    }
+    
+
+    function testSholdRevertIfPriceZero() public{
+        vm.startPrank(user);
+
+        vm.expectRevert();
+        nftMarket.listNft(address(nft), tokenId_, 0);
+
+        vm.stopPrank();
+    }
+
+    function testShoultRevertIdNotOwner() public {
+        vm.startPrank(vm.addr(3));
+
+        vm.expectRevert("You are not the owner of the NFT");
+        nftMarket.listNft(address(nft), tokenId_, 4);
+
+        vm.stopPrank();
+
     }
 }
