@@ -22,6 +22,7 @@ contract NtfMarcketPlaceTest is Test {
     MockNFT nft;
     address deployer = vm.addr(1);
     address user = vm.addr(2);
+    uint256 priceBased_ = 1e18;
     uint16 tokenId_ = 0;
 
 
@@ -60,4 +61,20 @@ contract NtfMarcketPlaceTest is Test {
         vm.stopPrank();
 
     }
+    
+
+    function testListingCorrectly() public {
+        vm.startPrank(user);
+
+        (address sellerBefore,,,) = nftMarket.listings(address(nft),tokenId_);
+
+        nftMarket.listNft(address(nft), tokenId_, priceBased_);
+
+        (address sellerAfter,,,)=nftMarket.listings(address(nft),tokenId_);
+
+        assert(sellerAfter == user && sellerBefore == address(0));
+
+        vm.stopPrank();
+    }
+    
 }

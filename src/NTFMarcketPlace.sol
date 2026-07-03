@@ -16,7 +16,7 @@ contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
         uint256 price;
     }
 
-    mapping(address => mapping(uint256 => Listing)) listings;
+    mapping(address => mapping(uint256 => Listing)) public listings;
 
     event addListingNft(address indexed nftAdress, address indexed seller, uint16 tokenId, uint256 price);
     event cancelledNFT(address indexed nftAdress, address indexed seller, uint16 tokenId);
