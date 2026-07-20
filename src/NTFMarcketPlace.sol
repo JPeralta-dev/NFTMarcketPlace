@@ -44,7 +44,7 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
     }
 
     // buy nft
-    function buyNft(address nftAdress_, uint16 tokenId_) external payable nonReentrant {
+    function buyNft(address nftAdress_, uint256 tokenId_) external payable nonReentrant {
         Listing memory listing_ = listings[nftAdress_][tokenId_];
         require(listing_.price > 0, "Listing not exist");
         require(msg.value == listing_.price, "Incorrect value");
@@ -65,7 +65,7 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
     }
     // Cancel
 
-    function cancelNft(address nftAdress_, uint16 tokenId_) external {
+    function cancelNft(address nftAdress_, uint256 tokenId_) external {
         Listing memory listing_ = listings[nftAdress_][tokenId_];
 
         require(listing_.seller == msg.sender, "Tu no eres el dueno");
@@ -84,8 +84,8 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
         if (!approved) revert NotApproved();
     }
 
-    function checkOwnerNft(address nftAdress_, uint256 tokenId_,address shoulOwner_) internal view returns (address owner_)  {
-        IERC721(nftAdress_).ownerOf(tokenId_);
+    function checkOwnerNft(address nftAdress_, uint256 tokenId_,address shoulOwner_) internal view returns (address)  {
+        address owner_ = IERC721(nftAdress_).ownerOf(tokenId_);
         require(owner_ == shoulOwner_, "You are not the owner of the NFT");
         return owner_;
     }
