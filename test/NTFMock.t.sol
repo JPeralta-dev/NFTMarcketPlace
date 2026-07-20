@@ -113,4 +113,13 @@ contract NtfMarcketPlaceTest is Test {
         vm.stopPrank();
 
     }
+
+    function testBuyNftShouldDontExist() public {
+        address user2 = vm.addr(3);
+
+        vm.startPrank(user2);
+        vm.expectRevert("Listing not exist");
+        nftMarket.buyNft(address(nft), tokenId_);
+        vm.stopPrank();
+    }
 }
