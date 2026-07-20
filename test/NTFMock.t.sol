@@ -122,4 +122,23 @@ contract NtfMarcketPlaceTest is Test {
         nftMarket.buyNft(address(nft), tokenId_);
         vm.stopPrank();
     }
+
+    function testCantNotWithIncorrectPay() public {
+        address user2 = vm.addr(3);
+        vm.startPrank(user);
+
+        nftMarket.listNft(address(nft), tokenId_, priceBased_);
+        
+        vm.stopPrank();
+
+        vm.startPrank(user2);
+
+        vm.deal(user2, priceBased_ - 1);
+
+        vm.expectRevert("Incorrect value");
+
+        nftMarket.buyNft{value: priceBased_ - 1 }(address(nft), tokenId_);
+        
+        vm.stopPrank();
+    }
 }
