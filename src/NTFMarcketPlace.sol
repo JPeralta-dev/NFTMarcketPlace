@@ -7,6 +7,7 @@ import {IERC721} from "../lib/openzeppelin-contracts/contracts/token/ERC721/IERC
 import {ReentrancyGuard} from "../lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
 
 error NotPermitValue();
+error NotApproved();
 
 contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
     struct Listing {
@@ -48,6 +49,9 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
         require(listing_.price > 0, "Listing not exist");
         require(msg.value == listing_.price, "Incorrect value");
 
+        bool approved = IERC721(nftAdress_).getApproved(tokenId_) == address(this) || IERC721(nftAdress_).isApprovedForAll(listing_.seller, address(this));
+        if (!approved) revert NotApproved();
+        
         delete listings[nftAdress_][tokenId_]; // primer cambio el estado
 
         (bool success,) = listing_.seller.call{value: msg.value}(""); // envio al vendedor su parte
