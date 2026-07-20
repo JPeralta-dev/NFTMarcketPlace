@@ -147,6 +147,7 @@ contract NtfMarcketPlaceTest is Test {
         vm.startPrank(user);
 
         nftMarket.listNft(address(nft), tokenId_, priceBased_);
+
         nft.approve(address(nftMarket), tokenId_);
         
         vm.stopPrank();
@@ -154,16 +155,20 @@ contract NtfMarcketPlaceTest is Test {
         vm.startPrank(user2);
 
         vm.deal(user2, priceBased_ );
-
-        
+        uint256 balanceBefore = address(user).balance;
+        address ownerBefore = nft.ownerOf(tokenId_);
         (address sellerBefore,,,) = nftMarket.listings(address(nft), tokenId_);
 
         nftMarket.buyNft{value: priceBased_ }(address(nft), tokenId_);
 
         (address sellerAfter,,,) = nftMarket.listings(address(nft), tokenId_);
-        
+        address ownerAfter = nft.ownerOf(tokenId_);
+        uint256 balanceAfter = address(user).balance;
+
         assert(sellerBefore == user && sellerAfter == address(0));
-        
+        assert(ownerAfter == user2  && ownerBefore == user);
+        assert(balanceAfter == balanceBefore + priceBased_);
+
         vm.stopPrank();
     }
 }
