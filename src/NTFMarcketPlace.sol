@@ -12,7 +12,7 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
     struct Listing {
         address seller;
         address nftAddress;
-        uint16 tokenId;
+        uint256 tokenId;
         uint256 price;
     }
 
@@ -20,7 +20,7 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
 
     event addListingNft(address indexed nftAdress, address indexed seller, uint16 tokenId, uint256 price);
     event cancelledNFT(address indexed nftAdress, address indexed seller, uint16 tokenId);
-    event soldNft(address indexed nftAdress, address indexed seller, uint16 tokenId, address indexed comprador);
+    event soldNft(address indexed nftAdress, address indexed seller, uint256 tokenId, address indexed comprador);
     constructor() Ownable(msg.sender) {}
 
     modifier checkValue(uint256 value) {
