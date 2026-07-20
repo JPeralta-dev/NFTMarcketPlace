@@ -33,9 +33,7 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
 
     function listNft(address nftAdress_, uint256 tokenId_, uint256 price_) external checkValue(price_) {
         // necesitamos evaluar que si sea un token como hacemos eso
-        address owner_ = IERC721(nftAdress_).ownerOf(tokenId_);
-
-        require(owner_ == msg.sender, "You are not the owner of the NFT");
+        address owner_ = checkOwnerNft(nftAdress_,tokenId_,msg.sender);
 
         checkApproveToken(nftAdress_, tokenId_, owner_);
 
@@ -50,6 +48,8 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
         Listing memory listing_ = listings[nftAdress_][tokenId_];
         require(listing_.price > 0, "Listing not exist");
         require(msg.value == listing_.price, "Incorrect value");
+
+        checkOwnerNft(nftAdress_, tokenId_, listing_.seller);
 
         checkApproveToken(nftAdress_, tokenId_, listing_.seller);
 
@@ -82,5 +82,11 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
         bool approved = IERC721(nftAdress_).getApproved(tokenId_) == address(this)
             || IERC721(nftAdress_).isApprovedForAll(seller_, address(this));
         if (!approved) revert NotApproved();
+    }
+
+    function checkOwnerNft(address nftAdress_, uint256 tokenId_,address shoulOwner_) internal view returns (address owner_)  {
+        IERC721(nftAdress_).ownerOf(tokenId_);
+        require(owner_ == shoulOwner_, "You are not the owner of the NFT");
+        return owner_;
     }
 }
