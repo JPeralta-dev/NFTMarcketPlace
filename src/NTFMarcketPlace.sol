@@ -8,7 +8,7 @@ import {ReentrancyGuard} from "../lib/openzeppelin-contracts/contracts/utils/Ree
 
 error NotPermitValue();
 
-contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
+contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
     struct Listing {
         address seller;
         address nftAddress;
@@ -41,13 +41,14 @@ contract NFTMarketPlaceMultiCollection is Ownable,ReentrancyGuard {
         listings[nftAdress_][tokenId_] = listin;
         emit addListingNft(nftAdress_, msg.sender, tokenId_, price_);
     }
+
     // buy nft
-    function buyNft(address nftAdress_, uint16 tokenId_) external payable nonReentrant() {
+    function buyNft(address nftAdress_, uint16 tokenId_) external payable nonReentrant {
         Listing memory listing_ = listings[nftAdress_][tokenId_];
         require(listing_.price > 0, "Listing not exist");
         require(msg.value == listing_.price, "Incorrect value");
 
-        delete listings[nftAdress_][tokenId_]; // primer cambio el estado 
+        delete listings[nftAdress_][tokenId_]; // primer cambio el estado
 
         (bool success,) = listing_.seller.call{value: msg.value}(""); // envio al vendedor su parte
 
