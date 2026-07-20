@@ -19,8 +19,8 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
 
     mapping(address => mapping(uint256 => Listing)) public listings;
 
-    event addListingNft(address indexed nftAdress, address indexed seller, uint16 tokenId, uint256 price);
-    event cancelledNFT(address indexed nftAdress, address indexed seller, uint16 tokenId);
+    event addListingNft(address indexed nftAdress, address indexed seller, uint256 tokenId, uint256 price);
+    event cancelledNFT(address indexed nftAdress, address indexed seller, uint256 tokenId);
     event soldNft(address indexed nftAdress, address indexed seller, uint256 tokenId, address indexed comprador);
     constructor() Ownable(msg.sender) {}
 
@@ -31,7 +31,7 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
 
     // List NFT
 
-    function listNft(address nftAdress_, uint16 tokenId_, uint256 price_) external checkValue(price_) {
+    function listNft(address nftAdress_, uint256 tokenId_, uint256 price_) external checkValue(price_) {
         // necesitamos evaluar que si sea un token como hacemos eso
         address owner_ = IERC721(nftAdress_).ownerOf(tokenId_);
 
@@ -78,7 +78,7 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
         if (value <= 0) revert NotPermitValue();
     }
 
-    function checkApproveToken(address nftAdress_, uint16 tokenId_, address seller_) internal view {
+    function checkApproveToken(address nftAdress_, uint256 tokenId_, address seller_) internal view {
         bool approved = IERC721(nftAdress_).getApproved(tokenId_) == address(this)
             || IERC721(nftAdress_).isApprovedForAll(seller_, address(this));
         if (!approved) revert NotApproved();
