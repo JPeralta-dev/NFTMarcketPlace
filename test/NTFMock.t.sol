@@ -141,4 +141,29 @@ contract NtfMarcketPlaceTest is Test {
         
         vm.stopPrank();
     }
+
+    function testWhenCanCorrectlPay() public {
+        address user2 = vm.addr(3);
+        vm.startPrank(user);
+
+        nftMarket.listNft(address(nft), tokenId_, priceBased_);
+        nft.approve(address(nftMarket), tokenId_);
+        
+        vm.stopPrank();
+
+        vm.startPrank(user2);
+
+        vm.deal(user2, priceBased_ );
+
+        
+        (address sellerBefore,,,) = nftMarket.listings(address(nft), tokenId_);
+
+        nftMarket.buyNft{value: priceBased_ }(address(nft), tokenId_);
+
+        (address sellerAfter,,,) = nftMarket.listings(address(nft), tokenId_);
+        
+        assert(sellerBefore == user && sellerAfter == address(0));
+        
+        vm.stopPrank();
+    }
 }
