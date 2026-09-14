@@ -96,6 +96,8 @@ contract NtfMarcketPlaceTest is Test {
 
         (address sellerBefore,,,) = nftMarket.listings(address(nft), tokenId_);
 
+        nft.approve(address(nftMarket), tokenId_);
+
         nftMarket.listNft(address(nft), tokenId_, priceBased_);
 
         (address sellerAfter,,,) = nftMarket.listings(address(nft), tokenId_);
