@@ -59,6 +59,8 @@ contract NtfMarcketPlaceTest is Test {
         vm.startPrank(user);
 
         (address sellerBefore,,,) = nftMarket.listings(address(nft), tokenId_);
+        
+        nft.approve(address(nftMarket), tokenId_);
 
         nftMarket.listNft(address(nft), tokenId_, priceBased_);
 
@@ -73,6 +75,8 @@ contract NtfMarcketPlaceTest is Test {
         vm.startPrank(user);
 
         (address sellerBefore,,,) = nftMarket.listings(address(nft), tokenId_);
+
+        nft.approve(address(nftMarket), tokenId_);
 
         nftMarket.listNft(address(nft), tokenId_, priceBased_);
 
@@ -127,6 +131,8 @@ contract NtfMarcketPlaceTest is Test {
     function testCantNotWithIncorrectPay() public {
         address user2 = vm.addr(3);
         vm.startPrank(user);
+
+        nft.approve(address(nftMarket), tokenId_);
 
         nftMarket.listNft(address(nft), tokenId_, priceBased_);
 
