@@ -19,7 +19,7 @@ contract NtfMarcketPlaceTest is Test {
     address deployer = vm.addr(1);
     address user = vm.addr(2);
     uint256 priceBased_ = 1e18;
-    uint16 tokenId_ = 0;
+    uint16 tokenId_ = 1;
 
     function setUp() public {
         vm.startPrank(deployer);
@@ -145,9 +145,11 @@ contract NtfMarcketPlaceTest is Test {
         address user2 = vm.addr(3);
         vm.startPrank(user);
 
+        
+        nft.approve(address(nftMarket), tokenId_);
+        
         nftMarket.listNft(address(nft), tokenId_, priceBased_);
 
-        nft.approve(address(nftMarket), tokenId_);
 
         vm.stopPrank();
 
