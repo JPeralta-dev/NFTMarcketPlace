@@ -18,6 +18,7 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
     }
 
     mapping(address => mapping(uint256 => Listing)) public listings;
+    // example; 0xd1af...asd, 01 -> {selle: Juan, nftaddress: 0xdas...xafa, tokenId: 01, price: 1,02203412312 weight}
 
     event addListingNft(address indexed nftAdress, address indexed seller, uint256 tokenId, uint256 price);
     event cancelledNFT(address indexed nftAdress, address indexed seller, uint256 tokenId);
@@ -33,7 +34,7 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
 
     function listNft(address nftAdress_, uint256 tokenId_, uint256 price_) external checkValue(price_) {
         // necesitamos evaluar que si sea un token como hacemos eso
-        address owner_ = checkOwnerNft(nftAdress_,tokenId_,msg.sender);
+        address owner_ = checkOwnerNft(nftAdress_, tokenId_, msg.sender);
 
         checkApproveToken(nftAdress_, tokenId_, owner_);
 
@@ -84,9 +85,9 @@ contract NFTMarketPlaceMultiCollection is Ownable, ReentrancyGuard {
         if (!approved) revert NotApproved();
     }
 
-    function checkOwnerNft(address nftAdress_, uint256 tokenId_,address shoulOwner_) internal view returns (address)  {
+    function checkOwnerNft(address nftAdress_, uint256 tokenId_, address shoulOwner_) internal view returns (address) {
         address owner_ = IERC721(nftAdress_).ownerOf(tokenId_);
-        require(owner_ == shoulOwner_, "You are not the owner of the NFT");
+        require(owner_ == shoulOwner_, "You are not the owner of the NFT"); // improve manage this error
         return owner_;
     }
 }
